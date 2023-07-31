@@ -1,0 +1,9 @@
+cff-version: 1.0.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Bottrill"
+  given-names: "Gabriel"
+title: "QT-CorGI: Quantum Three-coloring Graph Iteritavely"
+version: 0.1.0
+date-released: 2023-07-31
+url: "https://github.com/QSAR-UBC/QT-CorGI"
