@@ -53,6 +53,7 @@ def suspend_capture(pytestconfig):
 
     yield suspend_guard()
 
+
 @pytest.fixture(scope="module")
 def number_of_gates(pytestconfig):
     capmanager = pytestconfig.pluginmanager.getplugin("capturemanager")
@@ -63,11 +64,11 @@ def number_of_gates(pytestconfig):
 
     capmanager.suspend_global_capture(in_=True)
     number_of_gates = plots.NumberOfGates(
-    graphs_count_gates_dictionary=graph_dict,
-    num_layers=2,
-    connectivity_labels=connectivity_labels,
-    connectivity_colours=connectivity_colours,
-    bar_width=0.3,
+        graphs_count_gates_dictionary=graph_dict,
+        num_layers=2,
+        connectivity_labels=connectivity_labels,
+        connectivity_colours=connectivity_colours,
+        bar_width=0.3,
     )
     capmanager.resume_global_capture()
 
@@ -79,8 +80,8 @@ class TestNumGatesFigures:
         plt.clf()
         with NamedTemporaryFile("r+b", delete=True) as fd:
             number_of_gates.save_fig_entangled(fd, "png")
-            created_image = open(fd.name,"rb").read()
-        reference_image = open(path.join(data_loc, "num_entangled_gates.png"),"rb").read()
+            created_image = open(fd.name, "rb").read()
+        reference_image = open(path.join(data_loc, "num_entangled_gates.png"), "rb").read()
 
         assert reference_image == created_image
 
@@ -88,8 +89,8 @@ class TestNumGatesFigures:
         plt.clf()
         with NamedTemporaryFile("r+b", delete=True) as fd:
             number_of_gates.save_fig_total_gates(fd, "png")
-            created_image = open(fd.name,"rb").read()
-        reference_image = open(path.join(data_loc, "num_total_gates.png"),"rb").read()
+            created_image = open(fd.name, "rb").read()
+        reference_image = open(path.join(data_loc, "num_total_gates.png"), "rb").read()
 
         assert reference_image == created_image
 
@@ -100,6 +101,7 @@ def probability_correct_sampled():
     connectivity_colours = ["#1b9e77", "#d95f02", "#7570b3"]
     bar_width = 0.115
     yield plots.ProbabilityCorrectSampled(connectivity_labels, connectivity_colours, bar_width)
+
 
 class TestProbabilityCorrectSampledFigures:
     @pytest.fixture(autouse=True)
@@ -129,8 +131,8 @@ class TestProbabilityCorrectSampledFigures:
                     reference_name += "_with_fourth"
                 else:
                     self._plotter.save_fig_size_no_fourth(variable_size_data, fd, "png")
-            created_image = open(fd.name,"rb").read()
-        reference_image = open(path.join(data_loc, f"{reference_name}.png"),"rb").read()
+            created_image = open(fd.name, "rb").read()
+        reference_image = open(path.join(data_loc, f"{reference_name}.png"), "rb").read()
 
         assert reference_image == created_image
 
@@ -145,9 +147,7 @@ class TestProbabilityCorrectSampledFigures:
                     reference_name += "_with_fourth"
                 else:
                     self._plotter.save_fig_layers_no_fourth(variable_layers_data, fd, "png")
-            created_image = open(fd.name,"rb").read()
-        reference_image = open(path.join(data_loc, f"{reference_name}.png"),"rb").read()
+            created_image = open(fd.name, "rb").read()
+        reference_image = open(path.join(data_loc, f"{reference_name}.png"), "rb").read()
 
         assert reference_image == created_image
-
-

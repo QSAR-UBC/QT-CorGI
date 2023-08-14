@@ -60,8 +60,9 @@ def check_files(files_to_check):
         max_edges = get_max_edges(n)
 
         not_three_col = 0
-        for graph in tqdm(graphs, desc=f"Solving graphs from {file_to_check}", 
-                          position=1, leave=False):
+        for graph in tqdm(
+            graphs, desc=f"Solving graphs from {file_to_check}", position=1, leave=False
+        ):
             three_colourable = is_graph_three_colourable(graph, max_edges)
             if three_colourable:
                 d = round((2 * graph.number_of_edges()) / n)
