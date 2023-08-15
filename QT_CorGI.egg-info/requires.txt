@@ -7,3 +7,4 @@ networkx
 PyYAML
 matplotlib
 tqdm
+scipy

@@ -154,11 +154,11 @@ class FigureBuilder:
         for varying graph sizes
         """
         plt.clf()
-
+        
         save_location = os.path.join(self.fig_save_folder, "numberOfEntanglingGates.pdf")
         self.num_gates_plotter.save_fig_entangled(save_location)
 
-    def make_figure_number_entangling_graphs(self):
+    def make_figure_number_total_graphs(self):
         """
         Make a plot of the total number of gates necessary when using qubit or qutrit algorithm
         for varying graph sizes

@@ -194,7 +194,6 @@ class NumberOfGates:
         params = {}
 
         for param in self.graphs_dict.keys():
-
             length = len(self.graphs_dict[param])
             ds.append(length)
             for i in range(length):

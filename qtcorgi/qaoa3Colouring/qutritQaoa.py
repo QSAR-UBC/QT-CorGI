@@ -47,6 +47,7 @@ class QutritQaoa:
             most_freq_trit_string (str): most frequently sampled trit-string
             params (array): optimized parameters
         """
+
         # minimize the cost function
         def objective(params):
             gammas = params[0]
