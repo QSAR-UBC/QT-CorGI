@@ -1,0 +1,131 @@
+Metadata-Version: 2.1
+Name: QT-CorGI
+Version: 0.1.0
+Summary: Comparing qubits and qutrits for solving 3-colouring using QAOA
+Home-page: https://github.com/QSAR-UBC/qutrit-qaoa-dev
+Author: Gabriel Bottrill
+Author-email: bottrill@student.ubc.ca
+License: MIT license
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Science/Research
+Classifier: Natural Language :: English
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Topic :: Scientific/Engineering :: Physics
+Provides: qtcorgi
+Description-Content-Type: text/markdown
+License-File: LICENCE
+
+# QT-CorGI: 
+## **Q**uantum **T**hree-**C**ol**or**ing **G**raphs **I**teritavely
+
+**Q**uantum **T**hree-**C**ol**or**ing **G**raphs **I**teritavely:
+Repository contains open source code for comparing qutrits against qubits for solving graph three-colouring using the Quantum Approximate Optimization Algorithm (QAOA).
+
+## Overview
+This project consists of two packages described bellow:
+### 1. qaoa3colouring:
+qaoa3colouring acts as a graph 3-colouring solver using either qubit and qutrit based QAOA. 
+
+qaoa3colouring also allows for comparison by entering data into plot builders.
+
+### 2. experiments:
+experiments allows a user to recreate the data and figures used in IEEE submission. It also allows for users to update hyper-parameters and sets of graphs that are considered.
+
+This will be updated to include all future paper submissions.
+
+## Solving graphs (qaoa3colouring package)
+To solve a graph using the qaoa3colouring package users will create a QuditQaoa object for each graph that the user plans to solve.
+The user will then call QuditQaoa.qaoa_3_colouring() method to solve the graph.
+
+The QuditQaoa object will either be from the QubitQaoa or QutritQaoa class. This selection determines if a simulation using qubits or qutrits will be used.
+
+Currently, NumberOfGates and ProbabilityCorrectSampled classes can be used to make figures based on saved data.
+
+### Qutrit QAOA example
+```python
+import networkx as nx
+import qtcorgi
+edge_list = [[0,1], [1,2], [2,0]] # Edge list using numbered nodes
+graph = nx.Graph(edge_list)
+qutrit_solver = qtcorgi.QutritQaoa(graph, samples=10)
+solution_values = qutrit_solver.qaoa_3_colouring()
+```
+
+```pycon
+>>> print("Final objective value:", solution_values[0])
+Final objective value: -1.977612038050443
+>>> print("Sampled_solutions as ints:", solution_values[1])
+Sampled_solutions as ints: [15 21 21 11 21 19  7  7  5 19]
+>>> print("Trit-sting array:", solution_values[2])
+Trit-sting array: [1 2 0][2 1 0][2 1 0][1 0 2][2 1 0][2 0 1][0 2 1][0 2 1][0 1 2][2 0 1]
+>>> print("Most frequently sampled trit-stings:", solution_values[3])
+Most frequently sampled trit-stings: 210
+>>> print("Input parameters:", solution_values[4])
+Input parameters: [[ 0.3113133   0.396807    0.52144379]
+                   [-0.41018815 -0.14562269 -0.28965116]]
+```
+
+## Repeating Experiments
+
+To repeat a paper and change hyperparameters the experiments package can be used.
+By simply calling experiments.replicate_IEEE_paper() the experiment will be repeated and the graphs will be saved.
+default configurations used for the IEEE paper are found in experiments/config_IEEE
+
+Configuration parameters are listed and described bellow:
+
+- save_location (str): location to save the data folder.
+- save_folder_name (str): data folder name.
+- num_layers: number of QAOA layers used to differing graph sizes.
+- num_qutrit_steps: maximal number of optimization steps for qutrits.
+- num_qubit_steps: maximal number of optimization steps for qubits.
+- num_samples: number of samples taken for solution.
+- learning_rate: optimization learning rate.
+- fourth_colour_cost: cost for fourth colour for qubit cost Hamiltonian.
+- qubit_convergence_value: convergence value for qubit optimization halting.
+- graphs_to_generate_dictionary: dictionary describing which graphs to generate and solve.
+- n_for_layers: number of nodes for graphs used to test variable number of layers. 
+- test_layers: list of number of layers being tested.
+- opt_connectivity_labels: labels for the connectivity of tested graphs.
+- cost_connectivity_labels: labels for the connectivity of graphs used for cost metrics.
+- graphs_count_gates_dictionary: dictionary describing which graphs to generate and find circuit cost metrics.
+- min_qubit_steps: minimum number of optimization steps done for qubit optimization.
+- fig_width: width of final figure.
+- fig_height: height of final figure.
+- fig_save_folder: folder where figure is saved.
+- use_separate_params_qubit: boolean deciding if the colouring cost parameter and the fourth colour cost parameter are seperated.
+- connectivity_colours: list of colours used in figures.
+- opt_bar_width : width of bars on plotted graph.
+- cost_bar_width : width of bars on plotted graph.
+
+## Installation
+The only supported OS for this repo is Linux
+Currently, the Pennylane tested branch is missing some of the necessary features for this package to work. 
+To be able to run this branch it is necessary to install the dev branch which can be done using the following command:
+```commandline
+pip install git+https://github.com/PennyLaneAI/pennylane.git
+```
+To run this branch it is also necessary to install JAX, it is recommended to use GPU acceleration.
+This requires an nvidia graphics card with updated [nvidia drivers](https://www.nvidia.com/download/index.aspx) installed.
+It also requires CUDA, which can be difficult to install.
+Detailed installation instructions for JAX and CUDA can be found at [JAX's GitHub page](https://github.com/google/jax).
+However, if CUDA is not previously installed it is recommended to install both using the following commands:
+```commandline
+pip install --upgrade pip
+
+# CUDA 12 installation
+pip install --upgrade "jax[cuda12_pip]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+```
+If your GPU doesn't support CUDA 12 replace "cuda12_pip" with "cuda11_pip".
+
+Finally installing the project can be done by the following command:
+```commandline
+pip install -e /PATH/TO/REPO
+```
+    
