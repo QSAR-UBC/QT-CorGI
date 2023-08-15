@@ -58,7 +58,7 @@ def suspend_capture(pytestconfig):
 def number_of_gates(pytestconfig):
     capmanager = pytestconfig.pluginmanager.getplugin("capturemanager")
 
-    graph_dict = np.load(path.join(data_loc, "graph_dict.npy"))
+    graph_dict = np.load(path.join(data_loc, "graph_dict.npy"), allow_pickle=True).item()
     connectivity_labels = ["Low connectivity", "High connectivity", "Highest connectivity"]
     connectivity_colours = ["#1b9e77", "#d95f02", "#7570b3"]
 
