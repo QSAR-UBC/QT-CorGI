@@ -1,42 +1,13 @@
 import pytest
 import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
 import os.path as path
 import numpy as np
 from tempfile import NamedTemporaryFile
-from qtcorgi import GraphGenerator
 from qtcorgi import plots
 
 
 current_dir = path.dirname(path.realpath(__file__))
 data_loc = path.join(current_dir, "data", "figure_data")
-
-
-def figures_are_simular(reference_image, created_image):
-
-    # TODO find better way to check if image is correct
-    plt.clf()
-    f, axarr = plt.subplots(1, 2)
-
-    axarr[0].imshow(reference_image)
-    axarr[0].set_title("Reference image")
-
-    axarr[1].imshow(created_image)
-    axarr[1].set_title("Created image")
-
-    f.suptitle("Check if these plots are simmilar then close")
-    f.show()
-    while True:
-        query = input("\nWere the plots similar?: ")
-        answer = query[0].lower()
-        if query == "" or not answer in ["y", "n"]:
-            print("Please answer with yes or no!")
-        else:
-            break
-    if answer == "y":
-        return True
-    if answer == "n":
-        return False
 
 
 @pytest.fixture
@@ -58,18 +29,8 @@ def suspend_capture(pytestconfig):
 def number_of_gates(pytestconfig):
     capmanager = pytestconfig.pluginmanager.getplugin("capturemanager")
 
-    graph_dict = np.load(path.join(data_loc, "graph_dict.npy"), allow_pickle=True).item()
-    connectivity_labels = ["Low connectivity", "High connectivity", "Highest connectivity"]
-    connectivity_colours = ["#1b9e77", "#d95f02", "#7570b3"]
-
     capmanager.suspend_global_capture(in_=True)
-    number_of_gates = plots.NumberOfGates(
-        graphs_count_gates_dictionary=graph_dict,
-        num_layers=2,
-        connectivity_labels=connectivity_labels,
-        connectivity_colours=connectivity_colours,
-        bar_width=0.3,
-    )
+    number_of_gates = get_number_of_gates()
     capmanager.resume_global_capture()
 
     yield number_of_gates
@@ -97,10 +58,7 @@ class TestNumGatesFigures:
 
 @pytest.fixture()
 def probability_correct_sampled():
-    connectivity_labels = ["d=2", "d=3", "d=4"]
-    connectivity_colours = ["#1b9e77", "#d95f02", "#7570b3"]
-    bar_width = 0.115
-    yield plots.ProbabilityCorrectSampled(connectivity_labels, connectivity_colours, bar_width)
+    yield get_probability_correct_sampled()
 
 
 class TestProbabilityCorrectSampledFigures:
@@ -151,3 +109,75 @@ class TestProbabilityCorrectSampledFigures:
         reference_image = open(path.join(data_loc, f"{reference_name}.png"), "rb").read()
 
         assert reference_image == created_image
+
+
+def get_number_of_gates():
+    graph_dict = np.load(path.join(data_loc, "graph_dict.npy"), allow_pickle=True).item()
+    connectivity_labels = ["Low connectivity", "High connectivity", "Highest connectivity"]
+    connectivity_colours = ["#1b9e77", "#d95f02", "#7570b3"]
+
+    number_of_gates = plots.NumberOfGates(
+        graphs_count_gates_dictionary=graph_dict,
+        num_layers=2,
+        connectivity_labels=connectivity_labels,
+        connectivity_colours=connectivity_colours,
+        bar_width=0.3,
+    )
+    return number_of_gates
+
+
+def get_probability_correct_sampled():
+    connectivity_labels = ["d=2", "d=3", "d=4"]
+    connectivity_colours = ["#1b9e77", "#d95f02", "#7570b3"]
+    bar_width = 0.115
+    return plots.ProbabilityCorrectSampled(connectivity_labels, connectivity_colours, bar_width)
+
+
+"""Update figures if necessary"""
+
+
+def update_number_of_gate_figures():
+    """Updates number of gate figures to test against, in case of changes"""
+    number_of_gates = get_number_of_gates()
+    plt.clf()
+    number_of_gates.save_fig_entangled(path.join(data_loc, "num_entangled_gates.png"))
+    plt.clf()
+    number_of_gates.save_fig_total_gates(path.join(data_loc, "num_total_gates.png"))
+
+
+def update_prob_correct_sampled_graphs():
+    """Updates probability correct solution sampled figures to test against, in case of changes"""
+    update_variable_size_figures(True)
+    update_variable_size_figures(False)
+    update_variable_layers_figures(True)
+    update_variable_layers_figures(False)
+
+
+def update_variable_size_figures(with_fourth):
+    plt.clf()
+    data_location = path.join(data_loc, "variable_layers_data.npy")
+    variable_size_data = np.load(data_location, allow_pickle=True).item()
+
+    prob_corr_samp = get_probability_correct_sampled()
+    reference_name = "prob_correct_var_size"
+    if with_fourth:
+        save_fig = prob_corr_samp.save_fig_size
+        reference_name += "_with_fourth"
+    else:
+        save_fig = prob_corr_samp.save_fig_size_no_fourth
+    save_fig(variable_size_data, path.join(data_loc, f"{reference_name}.png"))
+
+
+def update_variable_layers_figures(with_fourth):
+    plt.clf()
+    data_location = path.join(data_loc, "variable_layers_data.npy")
+    variable_size_data = np.load(data_location, allow_pickle=True).item()
+
+    prob_corr_samp = get_probability_correct_sampled()
+    reference_name = "prob_correct_var_layers"
+    if with_fourth:
+        save_fig = prob_corr_samp.save_fig_layers
+        reference_name += "_with_fourth"
+    else:
+        save_fig = prob_corr_samp.save_fig_layers_no_fourth
+    save_fig(variable_size_data, path.join(data_loc, f"{reference_name}.png"))
