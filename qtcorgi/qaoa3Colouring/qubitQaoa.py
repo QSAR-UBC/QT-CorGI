@@ -63,6 +63,7 @@ class QubitQaoa:
             params (array): optimized parameters
             num_bad_strings (int): number of improperly coloured solutions sampled
         """
+
         # minimize the negative of the objective function
         def objective(params):
             return self._do_evolution_circuit(params, n_layers)
@@ -295,6 +296,7 @@ class QubitSeparatedParameterQaoa(QubitQaoa):
             params (array): optimized parameters
             num_bad_strings (int): number of improperly coloured solutions sampled
         """
+
         # minimize the negative of the objective function
         def objective(params):
             return self._do_evolution_circuit(params, n_layers)

@@ -45,8 +45,6 @@ cost_connectivity_labels:
   - High connectivity
   - Highest connectivity
 graphs_count_gates_dictionary: 
-  6: 
-    3: 20
   9:
     3: 20
     4: 20
@@ -70,6 +68,10 @@ graphs_count_gates_dictionary:
     3: 20
     8: 20
     14: 20
+  27:
+    3: 20
+    8: 20
+    16: 20
 
 min_qubit_steps: 200
 fig_width: 16

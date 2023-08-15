@@ -207,7 +207,8 @@ def __check_for_files(data_location, set_completed_func, set_intetermittent_func
 
 def __print_configurations(conf):
     print("current configuration settings are as follows:")
-    for i, key in conf.keys():
-        if i % 4 == 0:
+    for i, key in enumerate(conf.keys()):
+        if i % 5 == 0:
             print()
         print(f"{i+1}: {key} = {conf[key]}")
+    print()

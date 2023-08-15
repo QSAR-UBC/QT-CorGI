@@ -13,7 +13,7 @@ requirements = [
     "PyYAML",
     "matplotlib",
     "tqdm",
-    "scipy"
+    "scipy",
 ]
 
 info = {
