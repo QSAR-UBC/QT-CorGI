@@ -4,6 +4,27 @@
 **Q**uantum **T**hree-**C**ol**or**ing **G**raphs **I**teritavely:
 Repository contains open source code for comparing qutrits against qubits for solving graph three-colouring using the Quantum Approximate Optimization Algorithm (QAOA).
 
+### Example qutrit circuit composition
+```python
+import pennylane as qml
+import qtcorgi
+import networkx as nx
+
+edge_list = [[0,1]] # Edge list using numbered nodes
+graph = nx.Graph(edge_list)
+qutrit_solver = qtcorgi.QutritQaoa(graph)
+
+@qml.qnode(qml.device("default.qutrit", 2))
+def circuit(gamma, beta):
+    qutrit_solver.unitary_circuit([gamma],[beta],1)
+    return qml.expval(qml.GellMann(0,3))
+```
+```pycon
+>>> qml.draw(circuit)(1,2)
+0: ──TH─╭●───────────────────────────╭●─────TRX(2.00)──TRX(2.00)──TRX(2.00)─┤  <GellMann(3)>
+1: ──TH─╰TAdd†──TRZ(1.33)──TRZ(1.33)─╰TAdd──TRX(2.00)──TRX(2.00)──TRX(2.00)─┤    
+```
+
 ## Overview
 This project consists of two packages described bellow:
 ### 1. qaoa3colouring:
