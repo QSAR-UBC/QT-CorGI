@@ -4,8 +4,7 @@ from setuptools import setup, find_packages
 
 requirements = [
     "setuptools >= 61.0.0",
-    # "pennylane >= 0.32.0-dev0",
-    "numpy < 1.24",  # leave until pennylane 0.32.0 is released
+    "pennylane >= 0.32.0",
     "jax",
     "jaxlib",
     "optax",
